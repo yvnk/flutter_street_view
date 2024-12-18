@@ -1,5 +1,3 @@
-import 'dart:ui' show hashValues;
-
 class LatLng {
   /// Creates a geographical location specified in degrees [latitude] and
   /// [longitude].
@@ -9,10 +7,7 @@ class LatLng {
   /// The longitude is normalized to the half-open interval from -180.0
   /// (inclusive) to +180.0 (exclusive)
   const LatLng(double latitude, double longitude)
-      : assert(latitude != null),
-        assert(longitude != null),
-        latitude =
-            (latitude < -90.0 ? -90.0 : (90.0 < latitude ? 90.0 : latitude)),
+      : latitude = (latitude < -90.0 ? -90.0 : (90.0 < latitude ? 90.0 : latitude)),
         longitude = (longitude + 180.0) % 360.0 - 180.0;
 
   /// The latitude in degrees between -90.0 and 90.0, both inclusive.
@@ -43,7 +38,4 @@ class LatLng {
   bool operator ==(Object o) {
     return o is LatLng && o.latitude == latitude && o.longitude == longitude;
   }
-
-  @override
-  int get hashCode => hashValues(latitude, longitude);
 }

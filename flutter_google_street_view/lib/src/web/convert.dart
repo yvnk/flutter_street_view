@@ -5,8 +5,7 @@ import 'package:google_maps/google_maps.dart' as gmaps;
 import 'package:google_maps/google_maps.dart';
 
 /// Convert StreetViewPanoramaOptions to StreetViewPanoramaOptions of gmap
-Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
-    Map<String, dynamic> arg,
+Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(Map<String, dynamic> arg,
     {gmaps.StreetViewPanorama? current}) async {
   final result = gmaps.StreetViewPanoramaOptions();
   String? errorMsg;
@@ -20,9 +19,7 @@ Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
     request = gmaps.StreetViewPanoRequest()..pano = pano;
   } else {
     location = gmaps.LatLng(arg['position'][0], arg['position'][1]);
-    final sourceTmp = source == "outdoor"
-        ? gmaps.StreetViewSource.OUTDOOR
-        : gmaps.StreetViewSource.DEFAULT;
+    final sourceTmp = source == "outdoor" ? gmaps.StreetViewSource.OUTDOOR : gmaps.StreetViewSource.DEFAULT;
     request = gmaps.StreetViewLocationRequest()
       ..location = location
       ..radius = raduis
@@ -58,8 +55,7 @@ Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
   result.addressControl = arg['addressControl'] as bool? ?? true;
   result.addressControlOptions = toStreetViewAddressControlOptions(arg);
   result.disableDefaultUI = arg['disableDefaultUI'] as bool? ?? true;
-  result.disableDoubleClickZoom =
-      arg['disableDoubleClickZoom'] as bool? ?? true;
+  result.disableDoubleClickZoom = arg['disableDoubleClickZoom'] as bool? ?? true;
   result.enableCloseButton = arg['enableCloseButton'] as bool? ?? true;
   result.fullscreenControl = arg['fullscreenControl'] as bool? ?? true;
   result.fullscreenControlOptions = toFullscreenControlOptions(arg);
@@ -87,16 +83,12 @@ Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
 
 gmaps.StreetViewSource toStreetSource(Map<String, dynamic> arg) {
   final source = arg['source'];
-  return source == "outdoor"
-      ? gmaps.StreetViewSource.OUTDOOR
-      : gmaps.StreetViewSource.DEFAULT;
+  return source == "outdoor" ? gmaps.StreetViewSource.OUTDOOR : gmaps.StreetViewSource.DEFAULT;
 }
 
-gmaps.StreetViewAddressControlOptions? toStreetViewAddressControlOptions(
-    dynamic arg) {
+gmaps.StreetViewAddressControlOptions? toStreetViewAddressControlOptions(dynamic arg) {
   final pos = arg is Map ? arg["addressControlOptions"] : arg;
-  return gmaps.StreetViewAddressControlOptions()
-    ..position = toControlPosition(pos);
+  return gmaps.StreetViewAddressControlOptions()..position = toControlPosition(pos);
 }
 
 gmaps.FullscreenControlOptions? toFullscreenControlOptions(dynamic arg) {
@@ -104,11 +96,9 @@ gmaps.FullscreenControlOptions? toFullscreenControlOptions(dynamic arg) {
   return gmaps.FullscreenControlOptions()..position = toControlPosition(pos);
 }
 
-gmaps.MotionTrackingControlOptions? toMotionTrackingControlOptions(
-    dynamic arg) {
+gmaps.MotionTrackingControlOptions? toMotionTrackingControlOptions(dynamic arg) {
   final pos = arg is Map ? arg["motionTrackingControlOptions"] : arg;
-  return gmaps.MotionTrackingControlOptions()
-    ..position = toControlPosition(pos);
+  return gmaps.MotionTrackingControlOptions()..position = toControlPosition(pos);
 }
 
 gmaps.PanControlOptions? toPanControlOptions(dynamic arg) {
@@ -145,24 +135,16 @@ gmaps.ControlPosition? toControlPosition(String? position) {
                                           : position == "top_left"
                                               ? gmaps.ControlPosition.TOP_LEFT
                                               : position == "top_right"
-                                                  ? gmaps
-                                                      .ControlPosition.TOP_RIGHT
+                                                  ? gmaps.ControlPosition.TOP_RIGHT
                                                   : null;
 }
 
-Map<String, dynamic> streetViewPanoramaLocationToJson(
-        gmaps.StreetViewPanorama panorama) =>
-    linkToJson(panorama.links)
-      ..["panoId"] = panorama.pano
-      ..addAll(positionToJson(panorama.position));
+Map<String, dynamic> streetViewPanoramaLocationToJson(gmaps.StreetViewPanorama panorama) => linkToJson(panorama.links)
+  ..["panoId"] = panorama.pano
+  ..addAll(positionToJson(panorama.position));
 
-Map<String, dynamic> streetViewPanoramaCameraToJson(
-        gmaps.StreetViewPanorama panorama) =>
-    {
-      "bearing": panorama.pov?.heading,
-      "tilt": panorama.pov?.pitch,
-      "zoom": panorama.zoom
-    };
+Map<String, dynamic> streetViewPanoramaCameraToJson(gmaps.StreetViewPanorama panorama) =>
+    {"bearing": panorama.pov?.heading, "tilt": panorama.pov?.pitch, "zoom": panorama.zoom};
 
 Map<String, dynamic> positionToJson(gmaps.LatLng? position) => {
       "position": (position != null ? [position.lat, position.lng] : null)
