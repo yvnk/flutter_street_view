@@ -216,11 +216,10 @@ packages:
   street_view_platform_interface:
     dependency: "direct main"
     description:
-      name: street_view_platform_interface
-      sha256: "0f7a259e95c1192b9054328b1e3591f4867b045ce279dec4e0528f3f999f3ba8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
+      path: "../street_view_platform_interface"
+      relative: true
+    source: path
+    version: "1.0.9"
   string_scanner:
     dependency: transitive
     description:
