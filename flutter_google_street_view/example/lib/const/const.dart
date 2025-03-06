@@ -1,4 +1,6 @@
 // George St, Sydney
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 
 const LatLng SYDNEY = LatLng(-33.87365, 151.20689);

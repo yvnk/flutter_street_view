@@ -9,18 +9,15 @@ class StreetViewPanoramaNavigationDemo extends StatefulWidget {
   StreetViewPanoramaNavigationDemo({Key? key}) : super(key: key);
 
   @override
-  _StreetViewPanoramaNavigationDemoState createState() =>
-      _StreetViewPanoramaNavigationDemoState();
+  _StreetViewPanoramaNavigationDemoState createState() => _StreetViewPanoramaNavigationDemoState();
 }
 
-class _StreetViewPanoramaNavigationDemoState
-    extends State<StreetViewPanoramaNavigationDemo> {
+class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNavigationDemo> {
   StreetViewController? _controller;
   var animateFraction = 0.3;
   final int animateMaxDuration = 2000;
 
-  int get animateDuration =>
-      max((animateFraction * animateMaxDuration), 1).toInt();
+  int get animateDuration => max((animateFraction * animateMaxDuration), 1).toInt();
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +42,7 @@ class _StreetViewPanoramaNavigationDemoState
                   });
                 },
               ),
-              if (_controller != null)
-                PointerInterceptor(child: _controlPanel())
+              if (_controller != null) PointerInterceptor(child: _controlPanel())
             ],
           ),
         ),
@@ -58,7 +54,7 @@ class _StreetViewPanoramaNavigationDemoState
         mainAxisSize: MainAxisSize.min,
         children: [
           Card(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -79,8 +75,7 @@ class _StreetViewPanoramaNavigationDemoState
                             final double? tilt = camera.tilt;
                             final double? zoom = camera.zoom;
                             _controller!.animateTo(
-                                camera: StreetViewPanoramaCamera(
-                                    bearing: bearing, tilt: tilt, zoom: zoom),
+                                camera: StreetViewPanoramaCamera(bearing: bearing, tilt: tilt, zoom: zoom),
                                 duration: animateDuration);
                           });
                         }),
@@ -95,10 +90,7 @@ class _StreetViewPanoramaNavigationDemoState
                                 final double tilt = camera.tilt! + PAN_BY_DEG;
                                 final double? zoom = camera.zoom;
                                 _controller!.animateTo(
-                                    camera: StreetViewPanoramaCamera(
-                                        bearing: bearing,
-                                        tilt: tilt,
-                                        zoom: zoom),
+                                    camera: StreetViewPanoramaCamera(bearing: bearing, tilt: tilt, zoom: zoom),
                                     duration: animateDuration);
                               });
                             }),
@@ -111,10 +103,7 @@ class _StreetViewPanoramaNavigationDemoState
                                 final double tilt = camera.tilt! - PAN_BY_DEG;
                                 final double? zoom = camera.zoom;
                                 _controller!.animateTo(
-                                    camera: StreetViewPanoramaCamera(
-                                        bearing: bearing,
-                                        tilt: tilt,
-                                        zoom: zoom),
+                                    camera: StreetViewPanoramaCamera(bearing: bearing, tilt: tilt, zoom: zoom),
                                     duration: animateDuration);
                               });
                             })
@@ -129,8 +118,7 @@ class _StreetViewPanoramaNavigationDemoState
                             final double? tilt = camera.tilt;
                             final double? zoom = camera.zoom;
                             _controller!.animateTo(
-                                camera: StreetViewPanoramaCamera(
-                                    bearing: bearing, tilt: tilt, zoom: zoom),
+                                camera: StreetViewPanoramaCamera(bearing: bearing, tilt: tilt, zoom: zoom),
                                 duration: animateDuration);
                           });
                         }),
@@ -148,8 +136,7 @@ class _StreetViewPanoramaNavigationDemoState
                             final double? tilt = camera.tilt;
                             final double zoom = camera.zoom! + ZOOM_BY;
                             _controller!.animateTo(
-                                camera: StreetViewPanoramaCamera(
-                                    bearing: bearing, tilt: tilt, zoom: zoom),
+                                camera: StreetViewPanoramaCamera(bearing: bearing, tilt: tilt, zoom: zoom),
                                 duration: animateDuration);
                           });
                         }),
@@ -162,8 +149,7 @@ class _StreetViewPanoramaNavigationDemoState
                             final double? tilt = camera.tilt;
                             final double zoom = camera.zoom! - ZOOM_BY;
                             _controller!.animateTo(
-                                camera: StreetViewPanoramaCamera(
-                                    bearing: bearing, tilt: tilt, zoom: zoom),
+                                camera: StreetViewPanoramaCamera(bearing: bearing, tilt: tilt, zoom: zoom),
                                 duration: animateDuration);
                           });
                         })
@@ -240,8 +226,7 @@ class _StreetViewPanoramaNavigationDemoState
     return Material(
       elevation: 2,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: BorderSide(color: Colors.grey, width: 1)),
+          borderRadius: BorderRadius.circular(4), side: BorderSide(color: Colors.grey, width: 1)),
       child: InkWell(
         child: Padding(
           child: Icon(icon),
@@ -257,10 +242,9 @@ class _StreetViewPanoramaNavigationDemoState
         onPressed: onClick,
         child: Text(locationName),
         style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.white.withOpacity(0.8),
+          backgroundColor: Colors.white.withValues(alpha: 0.8),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-              side: BorderSide(width: 1, color: Colors.grey)),
+              borderRadius: BorderRadius.all(Radius.circular(4)), side: BorderSide(width: 1, color: Colors.grey)),
         ));
   }
 }

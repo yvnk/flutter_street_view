@@ -1,8 +1,4 @@
-import 'package:street_view_platform_interface/src/type/camera.dart';
-import 'package:street_view_platform_interface/src/type/street_view_source.dart';
-
 import '../../street_view_platform_interface.dart';
-import 'latLng.dart';
 
 class StreetViewPanoramaOptions {
   /// Set initialization location by panorama ID.
@@ -159,19 +155,16 @@ class StreetViewPanoramaOptions {
 
     // Web only //
     putToMapIfNonNull(map, 'addressControl', addressControl);
-    putToMapIfNonNull(
-        map, 'addressControlOptions', addressControlOptions?.toJson());
+    putToMapIfNonNull(map, 'addressControlOptions', addressControlOptions?.toJson());
     putToMapIfNonNull(map, 'disableDefaultUI', disableDefaultUI);
     putToMapIfNonNull(map, 'disableDoubleClickZoom', disableDoubleClickZoom);
     putToMapIfNonNull(map, 'enableCloseButton', enableCloseButton);
     putToMapIfNonNull(map, 'fullscreenControl', fullscreenControl);
-    putToMapIfNonNull(
-        map, 'fullscreenControlOptions', fullscreenControlOptions?.toJson());
+    putToMapIfNonNull(map, 'fullscreenControlOptions', fullscreenControlOptions?.toJson());
     putToMapIfNonNull(map, 'linksControl', linksControl);
     putToMapIfNonNull(map, 'motionTracking', motionTracking);
     putToMapIfNonNull(map, 'motionTrackingControl', motionTrackingControl);
-    putToMapIfNonNull(map, 'motionTrackingControlOptions',
-        motionTrackingControlOptions?.toJson());
+    putToMapIfNonNull(map, 'motionTrackingControlOptions', motionTrackingControlOptions?.toJson());
     putToMapIfNonNull(map, 'scrollwheel', scrollwheel);
     putToMapIfNonNull(map, 'panControl', panControl);
     putToMapIfNonNull(map, 'panControlOptions', panControlOptions?.toJson());

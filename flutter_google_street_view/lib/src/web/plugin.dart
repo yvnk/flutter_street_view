@@ -23,13 +23,13 @@ class FlutterGoogleStreetViewPlugin {
 
   static Map<int, bool> _lockMap = {};
   static Map<int, FlutterGoogleStreetViewPlugin> _plugins = {};
-  static Map<int, HtmlElement> _divs = {};
+  static Map<int, HTMLElement> _divs = {};
 
   String _getViewType(int viewId) => "my_street_view_$viewId";
 
   // The Flutter widget that contains the rendered StreetView.
   HtmlElementView? _widget;
-  late HtmlElement _div;
+  late HTMLElement _div;
   late int _viewId;
 
   /// The view id of street view.
@@ -47,13 +47,13 @@ class FlutterGoogleStreetViewPlugin {
 
   static void lock() {}
 
-  MapsEventListener? _statusChangedListener;
-  MapsEventListener? _povChangedListener;
-  MapsEventListener? _zoomChangedListener;
-  MapsEventListener? _closeclickListener;
+  gmaps.MapsEventListener? _statusChangedListener;
+  gmaps.MapsEventListener? _povChangedListener;
+  gmaps.MapsEventListener? _zoomChangedListener;
+  gmaps.MapsEventListener? _closeclickListener;
 
   Future<void> _setup(Map<String, dynamic> arg, [bool isReuse = false]) async {
-    StreetViewPanoramaOptions options;
+    sv.StreetViewPanoramaOptions options;
     String? errorMsg;
     try {
       options = await toStreetViewPanoramaOptions(arg);
@@ -65,11 +65,11 @@ class FlutterGoogleStreetViewPlugin {
 
     Completer<bool> initDone = Completer();
     if (!isReuse)
-      _streetViewPanorama = gmaps.StreetViewPanorama(_div as HTMLElement?, options);
+      _streetViewPanorama = sv.StreetViewPanorama(_div, options);
     else {
       //reuse _streetViewPanorama
       //set to invisible before init, then set visible after init done.
-      StreetViewPanoramaOptions fakeOptions;
+      sv.StreetViewPanoramaOptions fakeOptions;
       try {
         fakeOptions = await toStreetViewPanoramaOptions(arg)
           ..visible = false;
@@ -91,7 +91,7 @@ class FlutterGoogleStreetViewPlugin {
         initDone.complete(true);
         //delay visible to avoid show pre-pano
         if (isReuse && options.visible!)
-          _streetViewPanorama.options = gmaps.StreetViewPanoramaOptions()..visible = options.visible;
+          _streetViewPanorama.options = sv.StreetViewPanoramaOptions()..visible = options.visible;
       });
     }
     initDone.future.then((done) {
@@ -128,7 +128,7 @@ class FlutterGoogleStreetViewPlugin {
     debug("FlutterGoogleStreetViewPlugin:$arg");
     _viewId = _streetViewId += 1;
     debug("create new plugin, viewId:$viewId");
-    _div = DivElement()
+    _div = HTMLDivElement()
       ..id = _getViewType(_viewId)
       ..style.width = '100%'
       ..style.height = '100%';
@@ -148,7 +148,7 @@ class FlutterGoogleStreetViewPlugin {
   }
 
   Type get _dTag => runtimeType;
-  late gmaps.StreetViewPanorama _streetViewPanorama;
+  late sv.StreetViewPanorama _streetViewPanorama;
   late MethodChannel _methodChannel;
   Timer? _animator;
   DateTime? _animatorRunTimestame;
@@ -174,7 +174,7 @@ class FlutterGoogleStreetViewPlugin {
     _animator?.cancel();
     _releaseListener();
     _lockMap[viewId] = false;
-    _streetViewPanorama.options = gmaps.StreetViewPanoramaOptions()
+    _streetViewPanorama.options = sv.StreetViewPanoramaOptions()
       //set to invisible
       ..visible = false
       // reset control setting
@@ -193,7 +193,7 @@ class FlutterGoogleStreetViewPlugin {
       ..scrollwheel = true
       ..panControl = true
       ..zoomControl = true
-      ..pov = (gmaps.StreetViewPov()
+      ..pov = (sv.StreetViewPov()
         ..heading = 0
         ..pitch = 0)
       ..zoom = 1;
@@ -202,18 +202,26 @@ class FlutterGoogleStreetViewPlugin {
   //callback fun doc(https://developers.google.com/maps/documentation/javascript/reference/3.44/street-view#StreetViewPanorama-Events)
   void _setupListener() {
     _releaseListener();
-    _statusChangedListener = _streetViewPanorama.addListener("status_changed", () {
-      _methodChannel.invokeMethod("pano#onChange", _getLocation());
-    });
-    _povChangedListener = _streetViewPanorama.addListener("pov_changed", () {
-      _methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
-    });
-    _zoomChangedListener = _streetViewPanorama.addListener("zoom_changed", () {
-      _methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
-    });
-    _closeclickListener = _streetViewPanorama.addListener("closeclick", () {
-      _methodChannel.invokeMethod("close#onClick", true);
-    });
+    _statusChangedListener = _streetViewPanorama.addListener(
+        "status_changed",
+        () {
+          _methodChannel.invokeMethod("pano#onChange", _getLocation());
+        }.toJS);
+    _povChangedListener = _streetViewPanorama.addListener(
+        "pov_changed",
+        () {
+          _methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
+        }.toJS);
+    _zoomChangedListener = _streetViewPanorama.addListener(
+        "zoom_changed",
+        () {
+          _methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
+        }.toJS);
+    _closeclickListener = _streetViewPanorama.addListener(
+        "closeclick",
+        () {
+          _methodChannel.invokeMethod("close#onClick", true);
+        }.toJS);
   }
 
   void _releaseListener() {
@@ -353,7 +361,7 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
       });
 
   Future<Map<String, dynamic>> _updateInitOptions(Map arg) async {
-    gmaps.StreetViewPanoramaOptions options = gmaps.StreetViewPanoramaOptions();
+    sv.StreetViewPanoramaOptions options = sv.StreetViewPanoramaOptions();
     options = await _setPosition(arg, options: options, toApply: false);
     options = _setStreetNamesEnabled(arg, options: options, toApply: false);
     options = _setUserNavigationEnabled(arg, options: options, toApply: false);
@@ -379,16 +387,16 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _streetViewIsReady();
   }
 
-  gmaps.StreetViewPanoramaOptions _animateTo(Map arg, {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
-    final currentPov = _streetViewPanorama.pov!;
-    final bearingDef = currentPov.heading ?? 0;
-    final tiltDef = currentPov.pitch ?? 0;
-    final zoomDef = _streetViewPanorama.zoom ?? 0;
+  sv.StreetViewPanoramaOptions _animateTo(Map arg, {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
+    final currentPov = _streetViewPanorama.pov;
+    final bearingDef = currentPov.heading;
+    final tiltDef = currentPov.pitch;
+    final zoomDef = _streetViewPanorama.zoom;
     final bearingTarget = arg['bearing'] as double? ?? bearingDef;
     final tiltTarget = arg['tilt'] as double? ?? tiltDef;
     final zoomTarget = arg['zoom'] as double? ?? zoomDef;
-    _options.pov = gmaps.StreetViewPov()
+    _options.pov = sv.StreetViewPov()
       ..heading = bearingTarget
       ..pitch = tiltTarget;
     _options.zoom = (arg['zoom'] as double? ?? 0) + zoomTarget;
@@ -413,7 +421,7 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
           final bearingTarget = bearingDef + bearingDiff * percent;
           final tiltTarget = tiltDef + tiltDiff * percent;
           final zoomTarget = zoomDef + zoomDiff * percent;
-          final povTarget = gmaps.StreetViewPov()
+          final povTarget = sv.StreetViewPov()
             ..heading = bearingTarget
             ..pitch = tiltTarget;
           _streetViewPanorama.pov = povTarget;
@@ -433,9 +441,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
 
   Map<String, dynamic> _getPanoramaCamera() => streetViewPanoramaCameraToJson(_streetViewPanorama);
 
-  Future<gmaps.StreetViewPanoramaOptions> _setPosition(Map arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) async {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  Future<sv.StreetViewPanoramaOptions> _setPosition(Map arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) async {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
 
     double? raduis = arg['radius'] as double?;
     String? source = arg['source'] as String?;
@@ -444,19 +452,19 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     String? pano;
     if (arg['panoId'] != null) {
       pano = arg['panoId'];
-      request = gmaps.StreetViewPanoRequest()..pano = pano;
+      request = sv.StreetViewPanoRequest()..pano = pano;
     } else {
       location =
           arg['position'] != null ? gmaps.LatLng(arg['position'][0], arg['position'][1]) : _streetViewPanorama.position;
-      final sourceTmp = source == "outdoor" ? gmaps.StreetViewSource.OUTDOOR : gmaps.StreetViewSource.DEFAULT;
-      request = gmaps.StreetViewLocationRequest()
+      final sourceTmp = source == "outdoor" ? sv.StreetViewSource.OUTDOOR : sv.StreetViewSource.DEFAULT;
+      request = sv.StreetViewLocationRequest()
         ..location = location
         ..radius = raduis
         ..source = sourceTmp;
     }
     Completer<bool> check = Completer();
 
-    void error(gmaps.StreetViewPanoramaData? data, status) {
+    void error(sv.StreetViewPanoramaData? data, status) {
       final find = status == "OK";
       if (find) {
         if (location != null) {
@@ -475,16 +483,16 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
       check.complete(find);
     }
 
-    gmaps.StreetViewService().getPanorama(request, error);
+    sv.StreetViewService().getPanorama(request);
 
     await check.future;
     if (toApply) _apply(_options);
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setStreetNamesEnabled(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setStreetNamesEnabled(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['streetNamesEnabled'] : arg) as bool? ?? _isStreetNamesEnabled;
     _options.showRoadLabels = enable;
     if (toApply) {
@@ -493,9 +501,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setUserNavigationEnabled(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setUserNavigationEnabled(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['userNavigationEnabled'] : arg) as bool? ?? _isUserNavigationEnabled;
     _options.clickToGo = enable;
     if (toApply) {
@@ -504,9 +512,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setAddressControl(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setAddressControl(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['addressControl'] : arg) as bool? ?? _isAddressControl;
     _options.addressControl = enable;
     if (toApply) {
@@ -515,20 +523,20 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setAddressControlOptions(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
+  sv.StreetViewPanoramaOptions _setAddressControlOptions(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
     String? position = arg is Map ? arg['addressControlOptions'] : arg as String?;
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
-    _options.addressControlOptions = gmaps.StreetViewAddressControlOptions()..position = toControlPosition(position);
+    final _options = options ?? sv.StreetViewPanoramaOptions();
+    _options.addressControlOptions = sv.StreetViewAddressControlOptions()..position = toControlPosition(position);
     if (toApply) {
       _apply(_options);
     }
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setDisableDefaultUI(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setDisableDefaultUI(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['disableDefaultUI'] : arg) as bool? ?? _isDisableDefaultUI;
     _options.disableDefaultUI = enable;
     if (toApply) {
@@ -537,9 +545,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setDisableDoubleClickZoom(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setDisableDoubleClickZoom(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['disableDoubleClickZoom'] : arg) as bool? ?? _isDisableDoubleClickZoom;
     _options.disableDoubleClickZoom = enable;
     if (toApply) {
@@ -548,9 +556,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setEnableCloseButton(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setEnableCloseButton(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['enableCloseButton'] : arg) as bool? ?? _isEnableCloseButton;
     _options.enableCloseButton = enable;
     if (toApply) {
@@ -559,9 +567,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setFullscreenControl(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setFullscreenControl(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['fullscreenControl'] : arg) as bool? ?? _isFullscreenControl;
     _options.fullscreenControl = enable;
     if (toApply) {
@@ -570,10 +578,10 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setFullscreenControlOptions(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
+  sv.StreetViewPanoramaOptions _setFullscreenControlOptions(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
     String? position = arg is Map ? arg['fullscreenControlOptions'] : arg as String?;
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     _options.fullscreenControlOptions = gmaps.FullscreenControlOptions()..position = toControlPosition(position);
     if (toApply) {
       _apply(_options);
@@ -581,9 +589,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setLinksControl(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setLinksControl(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['linksControl'] : arg) as bool? ?? _isLinksControl;
     _options.linksControl = enable;
     if (toApply) {
@@ -592,9 +600,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setMotionTracking(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setMotionTracking(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['motionTracking'] : arg) as bool? ?? _isMotionTracking;
     _options.motionTracking = enable;
     if (toApply) {
@@ -603,9 +611,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setMotionTrackingControl(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setMotionTrackingControl(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['motionTrackingControl'] : arg) as bool? ?? _isMotionTrackingControl;
     _options.motionTrackingControl = enable;
     if (toApply) {
@@ -614,10 +622,10 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setMotionTrackingControlOptions(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
+  sv.StreetViewPanoramaOptions _setMotionTrackingControlOptions(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
     String? position = arg is Map ? arg['motionTrackingControlOptions'] : arg as String?;
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     _options.motionTrackingControlOptions = gmaps.MotionTrackingControlOptions()
       ..position = toControlPosition(position);
     if (toApply) {
@@ -626,9 +634,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setPanControl(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setPanControl(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['panControl'] : arg) as bool? ?? _isPanControl;
     _options.panControl = enable;
     if (toApply) {
@@ -637,10 +645,10 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setPanControlOptions(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
+  sv.StreetViewPanoramaOptions _setPanControlOptions(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
     String? position = arg is Map ? arg['panControlOptions'] : arg as String?;
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     _options.panControlOptions = gmaps.PanControlOptions()..position = toControlPosition(position);
     if (toApply) {
       _apply(_options);
@@ -648,9 +656,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setScrollwheel(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setScrollwheel(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['scrollwheel'] : arg) as bool? ?? _isScrollwheel;
     _options.scrollwheel = enable;
     if (toApply) {
@@ -659,9 +667,9 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setZoomControl(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setZoomControl(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['zoomControl'] : arg) as bool? ?? _isZoomControl;
     _options.zoomControl = enable;
     if (toApply) {
@@ -670,10 +678,10 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setZoomControlOptions(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
+  sv.StreetViewPanoramaOptions _setZoomControlOptions(dynamic arg,
+      {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
     String? position = arg is Map ? arg['zoomControlOptions'] : arg as String?;
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     _options.zoomControlOptions = gmaps.ZoomControlOptions()..position = toControlPosition(position);
     if (toApply) {
       _apply(_options);
@@ -681,9 +689,8 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  gmaps.StreetViewPanoramaOptions _setVisible(dynamic arg,
-      {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
-    final _options = options ?? gmaps.StreetViewPanoramaOptions();
+  sv.StreetViewPanoramaOptions _setVisible(dynamic arg, {sv.StreetViewPanoramaOptions? options, bool toApply = true}) {
+    final _options = options ?? sv.StreetViewPanoramaOptions();
     bool enable = (arg is Map ? arg['scrollwheel'] : arg) as bool? ?? _isVisible;
     _options.visible = enable;
     if (toApply) {
@@ -692,12 +699,12 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
     return _options;
   }
 
-  void _apply(gmaps.StreetViewPanoramaOptions options) {
+  void _apply(sv.StreetViewPanoramaOptions options) {
     _streetViewPanorama.options = options;
     _updateStatus(options);
   }
 
-  void _updateStatus(gmaps.StreetViewPanoramaOptions options) {
+  void _updateStatus(sv.StreetViewPanoramaOptions options) {
     if (options.showRoadLabels != null) _isStreetNamesEnabled = options.showRoadLabels!;
     if (options.clickToGo != null) _isUserNavigationEnabled = options.clickToGo!;
     if (options.addressControl != null) _isAddressControl = options.addressControl!;

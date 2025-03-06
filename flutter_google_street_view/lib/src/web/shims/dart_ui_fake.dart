@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:html' as html;
+import 'package:web/web.dart' as html;
 
 // Fake interface for the logic that this package needs from (web-only) dart:ui.
 // This is conditionally exported so the analyzer sees these methods as available.
@@ -12,8 +12,7 @@ import 'dart:html' as html;
 class platformViewRegistry {
   /// Shim for registerViewFactory
   /// https://github.com/flutter/engine/blob/master/lib/web_ui/lib/ui.dart#L72
-  static registerViewFactory(
-      String viewTypeId, html.Element Function(int viewId) viewFactory) {}
+  static registerViewFactory(String viewTypeId, html.Element Function(int viewId) viewFactory) {}
 }
 
 /// Shim for web_ui engine.AssetManager.

@@ -8,19 +8,16 @@ class StreetViewPanoramaEventsDemo extends StatefulWidget {
   StreetViewPanoramaEventsDemo({Key? key}) : super(key: key);
 
   @override
-  _StreetViewPanoramaEventsDemoState createState() =>
-      _StreetViewPanoramaEventsDemoState();
+  _StreetViewPanoramaEventsDemoState createState() => _StreetViewPanoramaEventsDemoState();
 }
 
-class _StreetViewPanoramaEventsDemoState
-    extends State<StreetViewPanoramaEventsDemo> {
+class _StreetViewPanoramaEventsDemoState extends State<StreetViewPanoramaEventsDemo> {
   StreetViewController? _controller;
 
   var _onPanoramaClickListenerCnt = 0;
   var _onPanoramaLongClickListenerCnt = 0;
 
-  var _onCameraChangeListenerInfo =
-      "Camera Change, bearing: N/A, tilt: N/A, zoom: N/A";
+  var _onCameraChangeListenerInfo = "Camera Change, bearing: N/A, tilt: N/A, zoom: N/A";
   var _onPanoramaChangeListenerInfo = "Pano Change: position: N/A, PanoId:N/A";
   var _onPanoramaClickListenerInfo = "onClick cnt:0";
   var _onPanoramaLongClickListenerInfo = "onLongClick cnt:0";
@@ -90,7 +87,7 @@ class _StreetViewPanoramaEventsDemoState
                   alignment: Alignment.topCenter,
                   child: PointerInterceptor(
                       child: Card(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Column(
@@ -134,10 +131,9 @@ class _StreetViewPanoramaEventsDemoState
         onPressed: onClick,
         child: Text(locationName),
         style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.white.withOpacity(0.8),
+          backgroundColor: Colors.white.withValues(alpha: 0.8),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-              side: BorderSide(width: 1, color: Colors.grey)),
+              borderRadius: BorderRadius.all(Radius.circular(4)), side: BorderSide(width: 1, color: Colors.grey)),
         ));
   }
 }

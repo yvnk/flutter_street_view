@@ -1,12 +1,7 @@
-import 'package:street_view_platform_interface/src/type/street_view_panorama_link.dart';
-import 'package:street_view_platform_interface/src/type/util/misc.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
-import 'latLng.dart';
-
 class StreetViewCameraPosition {
-  StreetViewCameraPosition(
-      {this.position, this.panoId, this.radius, this.source})
+  StreetViewCameraPosition({this.position, this.panoId, this.radius, this.source})
       : assert(position != null || panoId != null);
 
   /// The position of target panorama.
@@ -84,8 +79,7 @@ class StreetViewPanoramaCamera {
           fov == other.fov;
 
   @override
-  int get hashCode =>
-      bearing.hashCode ^ tilt.hashCode ^ zoom.hashCode ^ fov.hashCode;
+  int get hashCode => bearing.hashCode ^ tilt.hashCode ^ zoom.hashCode ^ fov.hashCode;
 
   @override
   String toString() {
@@ -121,8 +115,7 @@ class StreetViewPanoramaLocation {
           : null;
       panoId = map['panoId'] as String?;
     }
-    return StreetViewPanoramaLocation(
-        links: linksTmp, position: position, panoId: panoId);
+    return StreetViewPanoramaLocation(links: linksTmp, position: position, panoId: panoId);
   }
 
   Map<String, dynamic> toMap() {
@@ -143,8 +136,7 @@ class StreetViewPanoramaLocation {
           position == other.position &&
           panoId == other.panoId;
 
-  bool isNull() =>
-      this.links == null && this.position == null && this.panoId == null;
+  bool isNull() => this.links == null && this.position == null && this.panoId == null;
 
   @override
   int get hashCode => links.hashCode ^ position.hashCode ^ panoId.hashCode;
