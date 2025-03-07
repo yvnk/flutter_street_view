@@ -1,18 +1,15 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view_example/const/const.dart';
 
 class StreetViewPanoramaInitDemo extends StatefulWidget {
+  const StreetViewPanoramaInitDemo({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _StreetViewPanoramaInitDemoState();
 }
 
-class _StreetViewPanoramaInitDemoState
-    extends State<StreetViewPanoramaInitDemo> {
-  Uint8List? _bluePoint;
-
+class _StreetViewPanoramaInitDemoState extends State<StreetViewPanoramaInitDemo> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +18,7 @@ class _StreetViewPanoramaInitDemoState
         appBar: AppBar(
           title: const Text('Street View Init Demo'),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -93,33 +90,30 @@ class _StreetViewPanoramaInitDemoState
                  *  Set street view can zoom gestures or not.
                  *  default setting is true
                  */
-                zoomGesturesEnabled: false,
+                // zoomGesturesEnabled: false,
 
                 /**
                  *  iOS only
                  *  Add marker to street view.
                  */
-                markers: <Marker>[
-                  Marker(
-                    icon: _bluePoint == null
-                        ? BitmapDescriptor.defaultMarker
-                        : BitmapDescriptor.fromBytes(_bluePoint!),
-                    markerId: MarkerId("0"),
-                    position: SAN_FRAN,
-                    onTap: () {
-                      if (_bluePoint == null)
-                        DefaultAssetBundle.of(context)
-                            .load("assets/images/ic_dot.png")
-                            .then((data) {
-                          setState(() {
-                            _bluePoint = data.buffer.asUint8List();
-                          });
-                        });
-                      else
-                        setState(() => _bluePoint = null);
-                    },
-                  )
-                ].toSet(),
+                // markers: <Marker>{
+                //   Marker(
+                //     icon: _bluePoint == null ? BitmapDescriptor.defaultMarker : BitmapDescriptor.fromBytes(_bluePoint!),
+                //     markerId: const MarkerId("0"),
+                //     position: SAN_FRAN,
+                //     onTap: () {
+                //       if (_bluePoint == null) {
+                //         DefaultAssetBundle.of(context).load("assets/images/ic_dot.png").then((data) {
+                //           setState(() {
+                //             _bluePoint = data.buffer.asUint8List();
+                //           });
+                //         });
+                //       } else {
+                //         setState(() => _bluePoint = null);
+                //       }
+                //     },
+                //   )
+                // },
 
                 // Web only
                 //addressControl: false,

@@ -6,13 +6,13 @@ import 'package:kotlin_scope_function/kotlin_scope_function.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class StreetViewPanoramaOptionsDemo extends StatefulWidget {
-  StreetViewPanoramaOptionsDemo({Key? key}) : super(key: key);
+  const StreetViewPanoramaOptionsDemo({Key? key}) : super(key: key);
 
   @override
-  _StreetViewPanoramaOptionsDemoState createState() => _StreetViewPanoramaOptionsDemoState();
+  StreetViewPanoramaOptionsDemoState createState() => StreetViewPanoramaOptionsDemoState();
 }
 
-class _StreetViewPanoramaOptionsDemoState extends State<StreetViewPanoramaOptionsDemo> {
+class StreetViewPanoramaOptionsDemoState extends State<StreetViewPanoramaOptionsDemo> {
   StreetViewController? _controller;
 
   @override
@@ -23,7 +23,7 @@ class _StreetViewPanoramaOptionsDemoState extends State<StreetViewPanoramaOption
         appBar: AppBar(
           title: const Text('Street View Options Demo'),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -134,7 +134,7 @@ class _StreetViewPanoramaOptionsDemoState extends State<StreetViewPanoramaOption
       children: [
         Checkbox(value: check, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, onChanged: onChange),
         Text(title),
-        SizedBox(
+        const SizedBox(
           width: 8,
         ),
       ],

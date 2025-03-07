@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:js_interop';
 
@@ -9,7 +8,6 @@ import 'package:google_maps/google_maps_streetview.dart' as sv;
 Future<sv.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(Map<String, dynamic> arg,
     {sv.StreetViewPanorama? current}) async {
   final result = sv.StreetViewPanoramaOptions();
-  String? errorMsg;
   var request;
   double? raduis = arg['radius'] as double?;
   String? source = arg['source'] as String?;
@@ -26,28 +24,14 @@ Future<sv.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(Map<String, dyn
       ..radius = raduis
       ..source = sourceTmp;
   }
-  Completer<bool> check = Completer();
 
-  void error(sv.StreetViewPanoramaData? data, status) {
-    final bool find = (status.toString() == "OK");
-    if (find) {
-      if (location != null) {
-        result.position = data!.location!.latLng;
-      } else {
-        result.pano = data!.location!.pano;
-      }
-    } else {
-      errorMsg = location != null
-          ? "Oops..., no valid panorama found with position:${location.lat}, ${location.lng}, try to change `position`, `radius` or `source`."
-          : pano != null
-              ? "Oops..., no valid panorama found with panoId:$pano, try to change `panoId`."
-              : "setPosition, catch unknown error.";
-    }
-    check.complete(find);
+  final response = await sv.StreetViewService().getPanorama(request);
+  final data = response.data;
+  if (location != null) {
+    result.position = data.location!.latLng;
+  } else {
+    result.pano = data.location!.pano;
   }
-
-  sv.StreetViewService().getPanorama(request);
-  await check.future;
 
   result.showRoadLabels = arg['streetNamesEnabled'] as bool? ?? true;
   result.clickToGo = arg['clickToGo'] as bool? ?? true;
@@ -75,11 +59,8 @@ Future<sv.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(Map<String, dyn
     ..heading = arg['bearing'] ?? currentPov?.heading ?? 0
     ..pitch = arg['tilt'] ?? currentPov?.pitch ?? 0;
   result.zoom = arg['zoom'] as double?;
-  if (errorMsg != null) {
-    throw NoStreetViewException(options: result, errorMsg: errorMsg!);
-  } else {
-    return result;
-  }
+
+  return result;
 }
 
 sv.StreetViewSource toStreetSource(Map<String, dynamic> arg) {

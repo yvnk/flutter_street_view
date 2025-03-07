@@ -1,8 +1,8 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/jack/fvm/versions/stable
+FLUTTER_ROOT=/Users/jack/fvm/versions/3.27.1
 FLUTTER_APPLICATION_PATH=/Users/jack/development/packages/flutter_street_view/flutter_google_street_view/example
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=lib/main.dart
+FLUTTER_TARGET=/Users/jack/development/packages/flutter_street_view/flutter_google_street_view/example/lib/main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1
@@ -11,4 +11,4 @@ EXCLUDED_ARCHS[sdk=iphoneos*]=armv7
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false
-PACKAGE_CONFIG=.dart_tool/package_config.json
+PACKAGE_CONFIG=/Users/jack/development/packages/flutter_street_view/flutter_google_street_view/example/.dart_tool/package_config.json

@@ -6,13 +6,13 @@ import 'package:flutter_google_street_view_example/const/const.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class StreetViewPanoramaNavigationDemo extends StatefulWidget {
-  StreetViewPanoramaNavigationDemo({Key? key}) : super(key: key);
+  const StreetViewPanoramaNavigationDemo({Key? key}) : super(key: key);
 
   @override
-  _StreetViewPanoramaNavigationDemoState createState() => _StreetViewPanoramaNavigationDemoState();
+  StreetViewPanoramaNavigationDemoState createState() => StreetViewPanoramaNavigationDemoState();
 }
 
-class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNavigationDemo> {
+class StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNavigationDemo> {
   StreetViewController? _controller;
   var animateFraction = 0.3;
   final int animateMaxDuration = 2000;
@@ -27,7 +27,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
         appBar: AppBar(
           title: const Text('Street View Navigation Demo'),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -58,7 +58,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Row(
@@ -66,7 +66,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                     Expanded(
                         child: Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: SizedBox(),
                         ),
                         _arrowButton(Icons.arrow_back, () {
@@ -79,7 +79,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                                 duration: animateDuration);
                           });
                         }),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
                         Column(
@@ -94,7 +94,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                                     duration: animateDuration);
                               });
                             }),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             _arrowButton(Icons.arrow_downward, () {
@@ -109,7 +109,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                             })
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
                         _arrowButton(Icons.arrow_forward_rounded, () {
@@ -122,7 +122,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                                 duration: animateDuration);
                           });
                         }),
-                        Expanded(
+                        const Expanded(
                           child: SizedBox(),
                         ),
                       ],
@@ -140,7 +140,7 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                                 duration: animateDuration);
                           });
                         }),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         _arrowButton(Icons.remove, () {
@@ -155,20 +155,20 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                         })
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 16,
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 8,
                     ),
-                    Text("Anim duration"),
+                    const Text("Anim duration"),
                     Expanded(
                         child: Slider(
                       value: animateFraction,
@@ -185,14 +185,14 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
           ),
           Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Expanded(
                   child: _moveButton("GO TO SYDNEY", () {
                 _controller!.setPosition(position: SYDNEY);
               })),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Expanded(
@@ -200,21 +200,21 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
                   _controller!.setPosition(position: SAN_FRAN);
                 }),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Expanded(
                   child: _moveButton("GO TO SANTORINI", () {
                 _controller!.setPosition(panoId: SANTORINI);
               })),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Expanded(
                   child: _moveButton("GO TO INVALID POINT", () {
                 _controller!.setPosition(position: INVALID);
               })),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
             ],
@@ -226,13 +226,13 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
     return Material(
       elevation: 2,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4), side: BorderSide(color: Colors.grey, width: 1)),
+          borderRadius: BorderRadius.circular(4), side: const BorderSide(color: Colors.grey, width: 1)),
       child: InkWell(
-        child: Padding(
-          child: Icon(icon),
-          padding: EdgeInsets.all(4),
-        ),
         onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Icon(icon),
+        ),
       ),
     );
   }
@@ -240,11 +240,11 @@ class _StreetViewPanoramaNavigationDemoState extends State<StreetViewPanoramaNav
   Widget _moveButton(String locationName, VoidCallback onClick) {
     return OutlinedButton(
         onPressed: onClick,
-        child: Text(locationName),
         style: OutlinedButton.styleFrom(
           backgroundColor: Colors.white.withValues(alpha: 0.8),
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)), side: BorderSide(width: 1, color: Colors.grey)),
-        ));
+        ),
+        child: Text(locationName));
   }
 }

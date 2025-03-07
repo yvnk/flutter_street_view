@@ -5,13 +5,13 @@ import 'package:flutter_google_street_view_example/const/const.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class StreetViewPanoramaEventsDemo extends StatefulWidget {
-  StreetViewPanoramaEventsDemo({Key? key}) : super(key: key);
+  const StreetViewPanoramaEventsDemo({Key? key}) : super(key: key);
 
   @override
-  _StreetViewPanoramaEventsDemoState createState() => _StreetViewPanoramaEventsDemoState();
+  StreetViewPanoramaEventsDemoState createState() => StreetViewPanoramaEventsDemoState();
 }
 
-class _StreetViewPanoramaEventsDemoState extends State<StreetViewPanoramaEventsDemo> {
+class StreetViewPanoramaEventsDemoState extends State<StreetViewPanoramaEventsDemo> {
   StreetViewController? _controller;
 
   var _onPanoramaClickListenerCnt = 0;
@@ -30,7 +30,7 @@ class _StreetViewPanoramaEventsDemoState extends State<StreetViewPanoramaEventsD
         appBar: AppBar(
           title: const Text('Street View Events Demo'),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -78,7 +78,7 @@ class _StreetViewPanoramaEventsDemoState extends State<StreetViewPanoramaEventsD
                 onCloseClickListener: !kIsWeb
                     ? null
                     : () {
-                        print("Receive onCloseClickListener event!");
+                        debugPrint("Receive onCloseClickListener event!");
                         Navigator.pop(context);
                       },
               ),
@@ -89,22 +89,22 @@ class _StreetViewPanoramaEventsDemoState extends State<StreetViewPanoramaEventsD
                       child: Card(
                     color: Colors.white.withValues(alpha: 0.8),
                     child: Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(_onCameraChangeListenerInfo),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           Text(_onPanoramaChangeListenerInfo),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           if (!kIsWeb) Text(_onPanoramaClickListenerInfo),
                           if (!kIsWeb)
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                           if (!kIsWeb) Text(_onPanoramaLongClickListenerInfo),
@@ -129,11 +129,11 @@ class _StreetViewPanoramaEventsDemoState extends State<StreetViewPanoramaEventsD
   Widget _moveButton(String locationName, VoidCallback onClick) {
     return OutlinedButton(
         onPressed: onClick,
-        child: Text(locationName),
         style: OutlinedButton.styleFrom(
           backgroundColor: Colors.white.withValues(alpha: 0.8),
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(4)), side: BorderSide(width: 1, color: Colors.grey)),
-        ));
+        ),
+        child: Text(locationName));
   }
 }

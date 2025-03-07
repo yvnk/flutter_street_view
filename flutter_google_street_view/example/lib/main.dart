@@ -9,15 +9,17 @@ import 'demo/street_view_panorama_init.dart';
 import 'demo/street_view_panorama_options.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
@@ -34,11 +36,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
   }
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,40 +53,35 @@ class HomePage extends StatelessWidget {
         child: ListView(
           children: [
             ListTile(
-              title: Text("Street View Panorama init"),
-              subtitle: Text("An example of street view init."),
+              title: const Text("Street View Panorama init"),
+              subtitle: const Text("An example of street view init."),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => StreetViewPanoramaInitDemo()),
+                  MaterialPageRoute(builder: (context) => const StreetViewPanoramaInitDemo()),
                 );
               },
             ),
-            Divider(
+            const Divider(
               height: 1,
               thickness: 1,
             ),
             ListTile(
-              title: Text("Street View Panorama events"),
-              subtitle: Column(
+              title: const Text("Street View Panorama events"),
+              subtitle: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text.rich(
                     TextSpan(children: [
-                      TextSpan(
-                          text: "An example of street view event handling."),
-                      TextSpan(
-                          text: " Include invalid panorama event.",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: "An example of street view event handling."),
+                      TextSpan(text: " Include invalid panorama event.", style: TextStyle(fontWeight: FontWeight.bold)),
                     ]),
                   ),
                   SizedBox(
                     height: 8,
                   ),
                   DefaultTextStyle(
-                      style: TextStyle(
-                          color: Colors.redAccent, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
                       child: Row(
                         children: [
                           Expanded(
@@ -99,55 +98,50 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => StreetViewPanoramaEventsDemo()),
+                  MaterialPageRoute(builder: (context) => const StreetViewPanoramaEventsDemo()),
                 );
               },
             ),
-            Divider(
+            const Divider(
               height: 1,
               thickness: 1,
             ),
             ListTile(
-              title: Text("Street View Panorama navigation"),
-              subtitle: Text(
-                  "An example to show how to use navigation related function."),
+              title: const Text("Street View Panorama navigation"),
+              subtitle: const Text("An example to show how to use navigation related function."),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => StreetViewPanoramaNavigationDemo()),
+                  MaterialPageRoute(builder: (context) => const StreetViewPanoramaNavigationDemo()),
                 );
               },
             ),
-            Divider(
+            const Divider(
               height: 1,
               thickness: 1,
             ),
             ListTile(
-              title: Text("Street View Panorama options"),
-              subtitle: Text("A example to inactive/active options."),
+              title: const Text("Street View Panorama options"),
+              subtitle: const Text("A example to inactive/active options."),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => StreetViewPanoramaOptionsDemo()),
+                  MaterialPageRoute(builder: (context) => const StreetViewPanoramaOptionsDemo()),
                 );
               },
             ),
-            Divider(
+            const Divider(
               height: 1,
               thickness: 1,
             ),
             ListTile(
-              title: Text("Street View Panorama in ListView"),
-              subtitle: Text(
-                  "A example to show how to feed touch event when street view is a child of ListView."),
+              title: const Text("Street View Panorama in ListView"),
+              subtitle:
+                  const Text("A example to show how to feed touch event when street view is a child of ListView."),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => StreetViewPanoramaInListViewDemo()),
+                  MaterialPageRoute(builder: (context) => const StreetViewPanoramaInListViewDemo()),
                 );
               },
             ),

@@ -58,15 +58,18 @@ class FlutterGoogleStreetViewPlugin {
     try {
       options = await toStreetViewPanoramaOptions(arg);
     } catch (exception) {
+      print('error' + exception.toString());
       NoStreetViewException noStreetViewException = (exception as NoStreetViewException);
       options = noStreetViewException.options..visible = false;
       errorMsg = noStreetViewException.errorMsg;
     }
 
     Completer<bool> initDone = Completer();
-    if (!isReuse)
+    if (!isReuse) {
+      print('not reuse');
       _streetViewPanorama = sv.StreetViewPanorama(_div, options);
-    else {
+    } else {
+      print('reuse');
       //reuse _streetViewPanorama
       //set to invisible before init, then set visible after init done.
       sv.StreetViewPanoramaOptions fakeOptions;
@@ -463,25 +466,6 @@ extension FlutterGoogleStreetViewPluginExtension on FlutterGoogleStreetViewPlugi
         ..source = sourceTmp;
     }
     Completer<bool> check = Completer();
-
-    void error(sv.StreetViewPanoramaData? data, status) {
-      final find = status == "OK";
-      if (find) {
-        if (location != null) {
-          _options.position = data!.location!.latLng;
-        } else {
-          _options.pano = data!.location!.pano;
-        }
-      } else {
-        final errorMsg = location != null
-            ? "Oops..., no valid panorama found with position:${location.lat}, ${location.lng}, try to change `position`, `radius` or `source`."
-            : pano != null
-                ? "Oops..., no valid panorama found with panoId:$pano, try to change `panoId`."
-                : "setPosition, catch unknown error.";
-        _methodChannel.invokeMethod("pano#onChange", {"error": errorMsg});
-      }
-      check.complete(find);
-    }
 
     sv.StreetViewService().getPanorama(request);
 

@@ -17,7 +17,7 @@ class StreetViewPanoramaInListViewDemo extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Street View In ListView Demo'),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -33,10 +33,8 @@ class StreetViewPanoramaInListViewDemo extends StatelessWidget {
                       // Web didn't need feed gestureRecognizers
                       // more detail of OneSequenceGestureRecognizer
                       // see [https://api.flutter.dev/flutter/gestures/OneSequenceGestureRecognizer-class.html]
-                      gestureRecognizers: <
-                          Factory<OneSequenceGestureRecognizer>>{
-                        Factory<OneSequenceGestureRecognizer>(
-                            () => EagerGestureRecognizer())
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                        Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer())
                       },
                     ),
                   );
@@ -51,8 +49,7 @@ class StreetViewPanoramaInListViewDemo extends StatelessWidget {
     Random r = Random();
     return Container(
       height: 150,
-      color:
-          Color.fromARGB(0xff, r.nextInt(255), r.nextInt(255), r.nextInt(255)),
+      color: Color.fromARGB(0xff, r.nextInt(255), r.nextInt(255), r.nextInt(255)),
     );
   }
 }
